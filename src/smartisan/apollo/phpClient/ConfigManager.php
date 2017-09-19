@@ -90,8 +90,7 @@ class ConfigManager
                 }
             }
         }
-//        shmop_delete($shm_id);
-//        shmop_close($shm_id);
+        shmop_close($shm_id);
         return $data;
     }
 
