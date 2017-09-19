@@ -2,3 +2,4 @@
 composer.lock
 test
 apollo-client-php.iml
+.idea
