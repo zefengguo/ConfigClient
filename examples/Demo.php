@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: gzf-zephyr
- * Date: 2017/9/11
- * Time: 11:57s
- */
 
 require "Config_Properties.php";
 require "Config_Xml.php";

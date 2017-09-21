@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: gzf-zephyr
- * Date: 2017/9/13
- * Time: 15:52
- */
-
 
 require '../vendor/autoload.php';
 
