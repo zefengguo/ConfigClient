@@ -31,7 +31,7 @@ function br()
 
 function show($config)
 {
-    echo "file:".get_class($config);
+    echo "file:" . get_class($config);
     br();
     echo "host:" . $config->host;
     br();
