@@ -1,5 +1,5 @@
 /vendor/*
 composer.lock
-test
+/test
 apollo-client-php.iml
 .idea
