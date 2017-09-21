@@ -4,7 +4,7 @@ Apollo 客户端 PHP 版。
 ## 项目目录
 ```html
 │  composer.json
-├─101_101     demo配置文件  
+├─configs     demo读取配置文件  
 ├─examples                      demo
 │      Config_Json.php
 │      Config_Properties.php
