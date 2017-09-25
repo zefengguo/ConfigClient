@@ -6,7 +6,6 @@ class ConfigManager
 {
     private static $_instance = null;
     private $filePath = "";
-
     private function __construct()
     {
         $this->checkConfig();
