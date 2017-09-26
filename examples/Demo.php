@@ -20,7 +20,7 @@ show(ConfigYml::getInstance());
 showTime();
 
 //清空shm
-ConfigProperties::getInstance()->configMonitor->clearShmConfig("101.properties");
+//ConfigProperties::getInstance()->configMonitor->clearShmConfig("101.properties");
 
 
 function br()
