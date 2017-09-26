@@ -4,7 +4,7 @@ namespace smartisan\apollo\phpClient;
 
 class ConfigManager
 {
-    private static $_instance = null;
+    private static $sInstance = null;
     private $filePath = "";
 
     private function __construct()
@@ -19,24 +19,24 @@ class ConfigManager
 
     public static function getInstance()
     {
-        if (is_null(self::$_instance) || isset (self::$_instance)) {
-            self::$_instance = new self ();
+        if (is_null(self::$sInstance) || isset (self::$sInstance)) {
+            self::$sInstance = new self ();
         }
-        return self::$_instance;
+        return self::$sInstance;
     }
 
     public function getSettingArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) == "properties") {
-            return $this->setttingsProperties($nameSpace);
+            return $this->propertiesArray($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "xml") {
-            return $this->setttingArray[$nameSpace] = $this->setttingsXml($nameSpace);
+            return $this->xmlArray($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "json") {
-            return $this->setttingArray[$nameSpace] = $this->setttingsJson($nameSpace);
+            return $this->jsonArray($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "yml") {
-            return $this->setttingArray[$nameSpace] = $this->setttingsYml($nameSpace);
+            return $this->ymlArray($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "yaml") {
-            return $this->setttingArray[$nameSpace] = $this->setttingsYaml($nameSpace);
+            return $this->yamlArray($nameSpace);
         }
         return null;
     }
@@ -106,7 +106,7 @@ class ConfigManager
         return $data;
     }
 
-    private function setttingsProperties($nameSpace)
+    private function propertiesArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "properties") {
             throw new \Exception("the file suffix is not .properties");
@@ -119,7 +119,7 @@ class ConfigManager
         return parse_ini_string($content, true);
     }
 
-    private function setttingsXml($nameSpace)
+    private function xmlArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "xml") {
             throw new Exception("the file suffix is not .xml");
@@ -133,7 +133,7 @@ class ConfigManager
         return $this->getArray($dom->documentElement);
     }
 
-    private function setttingsJson($nameSpace)
+    private function jsonArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "json") {
             throw new Exception("the file suffix is not .json");
@@ -145,7 +145,7 @@ class ConfigManager
         return json_decode($content, TRUE);
     }
 
-    private function setttingsYml($nameSpace)
+    private function ymlArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "yml" && $this->getExtension($nameSpace) != "yaml") {
             throw new Exception("the file suffix is not .yml or .yaml");
@@ -157,9 +157,9 @@ class ConfigManager
         return yaml_parse($content);
     }
 
-    private function setttingsYaml($nameSpace)
+    private function yamlArray($nameSpace)
     {
-        return $this->setttingsYml($nameSpace);
+        return $this->ymlArray($nameSpace);
     }
 
     private function getExtension($nameSpace)

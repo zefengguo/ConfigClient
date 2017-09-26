@@ -2,12 +2,12 @@
 
 require '../vendor/autoload.php';
 
-class  ConfigYaml
+class  YamlConfig
 {
-    private static $_instance = null;
-    public $name;
-    public $host;
-    public $configMonitor;
+    private static $sInstance = null;
+    private $name;
+    private $host;
+    private $configMonitor;
 
     private function __construct()
     {
@@ -22,11 +22,16 @@ class  ConfigYaml
 
     }
 
+    public function __get($property_name)
+    {
+        return $this->$property_name;
+    }
+
     public static function getInstance()
     {
-        if (is_null(self::$_instance) || isset (self::$_instance)) {
-            self::$_instance = new self ();
+        if (is_null(self::$sInstance) || isset (self::$sInstance)) {
+            self::$sInstance = new self ();
         }
-        return self::$_instance;
+        return self::$sInstance;
     }
 }
