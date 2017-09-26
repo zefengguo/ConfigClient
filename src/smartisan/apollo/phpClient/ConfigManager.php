@@ -64,6 +64,9 @@ class ConfigManager
 
     public function clearShmConfig($nameSpace)
     {
+        if (PHP_OS != "Linux") {
+            return;
+        }
         $path = $this->filePath . $nameSpace;
         if (!file_exists($path)) {
             throw new \Exception(" no such file " . $path);
@@ -76,8 +79,8 @@ class ConfigManager
 
     private function getShmConfig($path)
     {
-        if(PHP_OS!="Linux"){
-            return  $this->readFile($path);
+        if (PHP_OS != "Linux") {
+            return $this->readFile($path);
         }
         $shm_key = ftok($path, '2');
         $shm_id = shmop_open($shm_key, "c", 0644, SHARE_CACHE_SIZE * 1024);
