@@ -2,7 +2,7 @@
 
 require '../vendor/autoload.php';
 
-class  Config_Yaml
+class  ConfigXml
 {
     private static $_instance = null;
     public $name;
@@ -12,9 +12,9 @@ class  Config_Yaml
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("105.yaml");
-        $this->name = $settings["db"]["name"];
-        $this->host = $settings["db"]["host"];
+        $settings = $this->configMonitor->getSettingArray("102.xml");
+        $this->name = $settings["db"][0]["name"][0]["#text"];
+        $this->host = $settings["db"][0]["host"][0]["#text"];
     }
 
     private function __clone()

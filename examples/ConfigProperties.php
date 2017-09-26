@@ -2,7 +2,7 @@
 
 require '../vendor/autoload.php';
 
-class  Config_Xml
+class  ConfigProperties
 {
     private static $_instance = null;
     public $name;
@@ -12,9 +12,9 @@ class  Config_Xml
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("102.xml");
-        $this->name = $settings["db"][0]["name"][0]["#text"];
-        $this->host = $settings["db"][0]["host"][0]["#text"];
+        $settings = $this->configMonitor->getSettingArray("101.properties");
+        $this->name = $settings["name"];
+        $this->host = $settings["host"];
     }
 
     private function __clone()

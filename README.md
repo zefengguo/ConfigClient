@@ -6,11 +6,11 @@ Apollo 客户端 PHP 版。
 │  composer.json
 ├─configs     demo读取配置文件  
 ├─examples                      demo
-│      Config_Json.php
-│      Config_Properties.php
-│      Config_Xml.php
-│      Config_Yaml.php
-│      Config_Yml.php
+│      ConfigJson.php
+│      ConfigProperties.php
+│      ConfigXml.php
+│      ConfigYaml.php
+│      ConfigYml.php
 │      Demo.php
 ├─src
 │  └─smartisan
@@ -23,7 +23,7 @@ Apollo 客户端 PHP 版。
 
 ## 使用
 
-Config.php 中CONFIG_FILE_PATH与apollo_agent中config_file_path保持一致,
+Config.php 中CONFIG_FILE_PATH与apollo-agent中config_file_path保持一致,
 使用参考Demo.php
 
 
