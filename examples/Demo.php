@@ -1,26 +1,26 @@
 <?php
 
-require "Config_Properties.php";
-require "Config_Xml.php";
-require "Config_Json.php";
-require "Config_Yaml.php";
-require "Config_Yml.php";
+require "ConfigProperties.php";
+require "ConfigXml.php";
+require "ConfigJson.php";
+require "ConfigYaml.php";
+require "ConfigYml.php";
 
 br();
 showTime();
-show(Config_Properties::getInstance());
+show(ConfigProperties::getInstance());
 showTime();
-show(Config_Xml::getInstance());
+show(ConfigXml::getInstance());
 showTime();
-show(Config_Json::getInstance());
+show(ConfigJson::getInstance());
 showTime();
-show(Config_Yaml::getInstance());
+show(ConfigYaml::getInstance());
 showTime();
-show(Config_Yml::getInstance());
+show(ConfigYml::getInstance());
 showTime();
 
 //清空shm
-//Config_Properties::getInstance()->configMonitor->clearShmConfig("101.properties");
+ConfigProperties::getInstance()->configMonitor->clearShmConfig("101.properties");
 
 
 function br()

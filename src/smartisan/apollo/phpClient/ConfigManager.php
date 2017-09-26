@@ -6,6 +6,7 @@ class ConfigManager
 {
     private static $_instance = null;
     private $filePath = "";
+
     private function __construct()
     {
         $this->checkConfig();
@@ -27,15 +28,15 @@ class ConfigManager
     public function getSettingArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) == "properties") {
-            return $this->setttings_properties($nameSpace);
+            return $this->setttingsProperties($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "xml") {
-            return $this->setttingArray[$nameSpace] = $this->setttings_xml($nameSpace);
+            return $this->setttingArray[$nameSpace] = $this->setttingsXml($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "json") {
-            return $this->setttingArray[$nameSpace] = $this->setttings_json($nameSpace);
+            return $this->setttingArray[$nameSpace] = $this->setttingsJson($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "yml") {
-            return $this->setttingArray[$nameSpace] = $this->setttings_yml($nameSpace);
+            return $this->setttingArray[$nameSpace] = $this->setttingsYml($nameSpace);
         } elseif ($this->getExtension($nameSpace) == "yaml") {
-            return $this->setttingArray[$nameSpace] = $this->setttings_yaml($nameSpace);
+            return $this->setttingArray[$nameSpace] = $this->setttingsYaml($nameSpace);
         }
         return null;
     }
@@ -58,7 +59,7 @@ class ConfigManager
         if (!file_exists($pathTem)) {
             throw new \Exception(" no such file " . $pathTem);
         }
-        return $this->getShmConfig($pathTem, $nameSpace);
+        return $this->getShmConfig($pathTem);
     }
 
     public function clearShmConfig($nameSpace)
@@ -73,17 +74,18 @@ class ConfigManager
         shmop_close($shm_id);
     }
 
-    private function getShmConfig($path, $nameSpace)
+    private function getShmConfig($path)
     {
+        if(PHP_OS!="Linux"){
+            return  $this->readFile($path);
+        }
         $shm_key = ftok($path, '2');
         $shm_id = shmop_open($shm_key, "c", 0644, SHARE_CACHE_SIZE * 1024);
         $data = shmop_read($shm_id, 0, SHARE_CACHE_SIZE * 1024);
         if ($data != null) {
             $data = str_replace("\x00", "", $data);
             if (empty($data)) {
-                $f = fopen($path, "r");
-                $data = fread($f, filesize($path));
-                fclose($f);
+                $data = $this->readFile($path);
                 if (!empty($data)) {
                     shmop_write($shm_id, $data, 0);
                 }
@@ -93,7 +95,15 @@ class ConfigManager
         return $data;
     }
 
-    private function setttings_properties($nameSpace)
+    private function readFile($path)
+    {
+        $f = fopen($path, "r");
+        $data = fread($f, filesize($path));
+        fclose($f);
+        return $data;
+    }
+
+    private function setttingsProperties($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "properties") {
             throw new \Exception("the file suffix is not .properties");
@@ -106,7 +116,7 @@ class ConfigManager
         return parse_ini_string($content, true);
     }
 
-    private function setttings_xml($nameSpace)
+    private function setttingsXml($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "xml") {
             throw new Exception("the file suffix is not .xml");
@@ -120,7 +130,7 @@ class ConfigManager
         return $this->getArray($dom->documentElement);
     }
 
-    private function setttings_json($nameSpace)
+    private function setttingsJson($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "json") {
             throw new Exception("the file suffix is not .json");
@@ -132,7 +142,7 @@ class ConfigManager
         return json_decode($content, TRUE);
     }
 
-    private function setttings_yml($nameSpace)
+    private function setttingsYml($nameSpace)
     {
         if ($this->getExtension($nameSpace) != "yml" && $this->getExtension($nameSpace) != "yaml") {
             throw new Exception("the file suffix is not .yml or .yaml");
@@ -144,9 +154,9 @@ class ConfigManager
         return yaml_parse($content);
     }
 
-    private function setttings_yaml($nameSpace)
+    private function setttingsYaml($nameSpace)
     {
-        return $this->setttings_yml($nameSpace);
+        return $this->setttingsYml($nameSpace);
     }
 
     private function getExtension($nameSpace)
