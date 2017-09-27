@@ -3,7 +3,7 @@
 Apollo 客户端 PHP 版。
 ## 项目目录
 ```html
-│  composer.json
+├─composer.json
 ├─configs     demo读取配置文件  
 ├─examples                      demo
 │      JsonConfig.php
@@ -23,10 +23,10 @@ Apollo 客户端 PHP 版。
 
 ## 使用
 ```html
-1.修改配置文件存放目录（src/apollo/phpClient/Config.php）
+1.修改配置文件（src/apollo/phpClient/Config.php）
 define("CONFIG_FILE_PATH","配置文件存放目录")
 
-Linux环境下默认共享内存为5kb，若配置文件过大,需添加配置项（kb）
+Linux环境下默认共享内存为5kb，若配置文件过大,需添加配置项,修改SHARE_CACHE_SIZE大小（kb）
 define("SHARE_CACHE_SIZE",5);
 
 备注：
