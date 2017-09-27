@@ -44,7 +44,7 @@ class ConfigManager
     private function checkConfig()
     {
         if (!is_dir(CONFIG_FILE_PATH)) {
-            throw new \Exception("no such directory CONFIG_FILE_PATH");
+            throw new \Exception("no such directory:".CONFIG_FILE_PATH);
         }
         $this->filePath = CONFIG_FILE_PATH;
         $suffix = substr($this->filePath, -1);
