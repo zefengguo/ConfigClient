@@ -51,6 +51,9 @@ class ConfigManager
         if ($suffix != "/" && $suffix != "\\") {
             $this->filePath = $this->filePath . "/";
         }
+        if (!defined('SHARE_CACHE_SIZE')) {
+            define("SHARE_CACHE_SIZE", 5);
+        }
     }
 
     private function getConfigByNameSpace($nameSpace)
@@ -192,7 +195,5 @@ class ConfigManager
         }
         return $array;
     }
-
-
 }
 
