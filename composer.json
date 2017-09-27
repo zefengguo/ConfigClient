@@ -1,15 +1,8 @@
 {
     "name": "smartisan/apolloPhpClient",
-    "description": "apolloPhpClient",
     "type": "library",
     "license": "MIT",
     "version":"1.0.0",
-    "authors": [
-        {
-            "name": "smartisan",
-            "email": "smartisan@smartisan.com"
-        }
-    ],
     "require": {
         "php": ">=5.4.0"
     },
