@@ -6,6 +6,7 @@ class ConfigManager
 {
     private static $sInstance = null;
     private $filePath = "";
+    private $suffixArray = array('properties', 'xml', 'json', 'yml', 'yaml');
 
     private function __construct()
     {
@@ -27,18 +28,35 @@ class ConfigManager
 
     public function getConfigArray($nameSpace)
     {
-        if ($this->getExtension($nameSpace) == "properties") {
-            return $this->propertiesArray($nameSpace);
-        } elseif ($this->getExtension($nameSpace) == "xml") {
-            return $this->xmlArray($nameSpace);
-        } elseif ($this->getExtension($nameSpace) == "json") {
-            return $this->jsonArray($nameSpace);
-        } elseif ($this->getExtension($nameSpace) == "yml") {
-            return $this->ymlArray($nameSpace);
-        } elseif ($this->getExtension($nameSpace) == "yaml") {
-            return $this->yamlArray($nameSpace);
+        $configArray = null;
+        $suffix = $this->getSuffix($nameSpace);
+        if (!in_array($suffix, $this->suffixArray)) {
+            throw new \Exception("not support the file format:" . $suffix);
         }
-        return null;
+        $content = $this->getConfigByNameSpace($nameSpace);
+        if (is_null($content) || empty($content)) {
+            return $configArray;
+        }
+        switch ($suffix) {
+            case "properties":
+                $configArray = parse_ini_string($content, true);
+                break;
+            case "xml":
+                $configArray = $this->getXmlToArray($content);
+                break;
+            case "json":
+                $configArray = json_decode($content, TRUE);
+                break;
+            case "yml":
+                $configArray = yaml_parse($content);
+                break;
+            case "yaml":
+                $configArray = yaml_parse($content);
+                break;
+            default:
+                ;
+        }
+        return $configArray;
     }
 
     private function checkConfig()
@@ -109,72 +127,22 @@ class ConfigManager
         return $data;
     }
 
-    private function propertiesArray($nameSpace)
-    {
-        if ($this->getExtension($nameSpace) != "properties") {
-            throw new \Exception("the file suffix is not .properties");
-        }
-
-        $content = $this->getConfigByNameSpace($nameSpace);
-        if ($content == "") {
-            return $content;
-        }
-        return parse_ini_string($content, true);
-    }
-
-    private function xmlArray($nameSpace)
-    {
-        if ($this->getExtension($nameSpace) != "xml") {
-            throw new Exception("the file suffix is not .xml");
-        }
-        $content = $this->getConfigByNameSpace($nameSpace);
-        if ($content == "") {
-            return $content;
-        }
-        $dom = new \DOMDocument();
-        $dom->loadXML($content);
-        return $this->getArray($dom->documentElement);
-    }
-
-    private function jsonArray($nameSpace)
-    {
-        if ($this->getExtension($nameSpace) != "json") {
-            throw new Exception("the file suffix is not .json");
-        }
-        $content = $this->getConfigByNameSpace($nameSpace);
-        if ($content == "") {
-            return $content;
-        }
-        return json_decode($content, TRUE);
-    }
-
-    private function ymlArray($nameSpace)
-    {
-        if ($this->getExtension($nameSpace) != "yml" && $this->getExtension($nameSpace) != "yaml") {
-            throw new Exception("the file suffix is not .yml or .yaml");
-        }
-        $content = $this->getConfigByNameSpace($nameSpace);
-        if ($content == "") {
-            return $content;
-        }
-        return yaml_parse($content);
-    }
-
-    private function yamlArray($nameSpace)
-    {
-        return $this->ymlArray($nameSpace);
-    }
-
-    private function getExtension($nameSpace)
+    private function getSuffix($nameSpace)
     {
         $nameSpaceSuffixArray = explode('.', $nameSpace);
         return end($nameSpaceSuffixArray);
     }
 
-    private function getArray($node)
+    private function getXmlToArray($content)
+    {
+        $dom = new \DOMDocument();
+        $dom->loadXML($content);
+        return $this->getXmlNodeToArray($dom->documentElement);
+    }
+
+    private function getXmlNodeToArray($node)
     {
         $array = false;
-
         if ($node->hasAttributes()) {
             foreach ($node->attributes as $attr) {
                 $array[$attr->nodeName] = $attr->nodeValue;
@@ -182,11 +150,11 @@ class ConfigManager
         }
         if ($node->hasChildNodes()) {
             if ($node->childNodes->length == 1) {
-                $array[$node->firstChild->nodeName] = $this->getArray($node->firstChild);
+                $array[$node->firstChild->nodeName] = $this->getXmlNodeToArray($node->firstChild);
             } else {
                 foreach ($node->childNodes as $childNode) {
                     if ($childNode->nodeType != XML_TEXT_NODE) {
-                        $array[$childNode->nodeName][] = $this->getArray($childNode);
+                        $array[$childNode->nodeName][] = $this->getXmlNodeToArray($childNode);
                     }
                 }
             }
