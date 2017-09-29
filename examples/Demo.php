@@ -12,13 +12,12 @@ show(JsonConfig::getInstance());
 show(YamlConfig::getInstance());
 show(YmlConfig::getInstance());
 //清空shm
-#PropertiesConfig::getInstance()->configMonitor->clearShmConfig("101.properties");
+PropertiesConfig::getInstance()->configMonitor->clearShm("101.properties");
 
 
 function br()
 {
     echo "\n";
-    echo "<br/>";
 }
 
 function show($config)
@@ -30,6 +29,4 @@ function show($config)
     echo "name:" . $config->name;
     br();
 }
-
-?>
 

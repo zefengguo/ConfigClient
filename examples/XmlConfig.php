@@ -12,7 +12,7 @@ class  XmlConfig
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("102.xml");
+        $settings = $this->configMonitor->getConfigArray("102.xml");
         $this->name = $settings["db"][0]["name"][0]["#text"];
         $this->host = $settings["db"][0]["host"][0]["#text"];
     }
@@ -21,9 +21,9 @@ class  XmlConfig
     {
     }
 
-    public function __get($property_name)
+    public function __get($propertyName)
     {
-        return $this->$property_name;
+        return $this->$propertyName;
     }
 
     public static function getInstance()

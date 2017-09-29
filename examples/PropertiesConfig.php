@@ -12,7 +12,7 @@ class  PropertiesConfig
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("101.properties");
+        $settings = $this->configMonitor->getConfigArray("101.properties");
         $this->name = $settings["name"];
         $this->host = $settings["host"];
     }
@@ -22,9 +22,9 @@ class  PropertiesConfig
 
     }
 
-    public function __get($property_name)
+    public function __get($propertyName)
     {
-        return $this->$property_name;
+        return $this->$propertyName;
     }
 
     public static function getInstance()

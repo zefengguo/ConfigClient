@@ -12,7 +12,7 @@ class  JsonConfig
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("103.json");
+        $settings = $this->configMonitor->getConfigArray("103.json");
         $this->name = $settings["name"];
         $this->host = $settings["host"];
     }
@@ -22,9 +22,9 @@ class  JsonConfig
 
     }
 
-    public function __get($property_name)
+    public function __get($propertyName)
     {
-        return $this->$property_name;
+        return $this->$propertyName;
     }
 
     public static function getInstance()

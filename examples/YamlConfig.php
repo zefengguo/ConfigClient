@@ -12,7 +12,7 @@ class  YamlConfig
     private function __construct()
     {
         $this->configMonitor = \smartisan\apollo\phpClient\ConfigManager::getInstance();
-        $settings = $this->configMonitor->getSettingArray("105.yaml");
+        $settings = $this->configMonitor->getConfigArray("105.yaml");
         $this->name = $settings["db"]["name"];
         $this->host = $settings["db"]["host"];
     }
@@ -22,9 +22,9 @@ class  YamlConfig
 
     }
 
-    public function __get($property_name)
+    public function __get($propertyName)
     {
-        return $this->$property_name;
+        return $this->$propertyName;
     }
 
     public static function getInstance()

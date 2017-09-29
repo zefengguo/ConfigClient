@@ -25,7 +25,7 @@ class ConfigManager
         return self::$sInstance;
     }
 
-    public function getSettingArray($nameSpace)
+    public function getConfigArray($nameSpace)
     {
         if ($this->getExtension($nameSpace) == "properties") {
             return $this->propertiesArray($nameSpace);
@@ -44,7 +44,7 @@ class ConfigManager
     private function checkConfig()
     {
         if (!is_dir(CONFIG_FILE_PATH)) {
-            throw new \Exception("no such directory:".CONFIG_FILE_PATH);
+            throw new \Exception("no such directory:" . CONFIG_FILE_PATH);
         }
         $this->filePath = CONFIG_FILE_PATH;
         $suffix = substr($this->filePath, -1);
@@ -62,10 +62,10 @@ class ConfigManager
         if (!file_exists($pathTem)) {
             throw new \Exception(" no such file " . $pathTem);
         }
-        return $this->getShmConfig($pathTem);
+        return $this->getShm($pathTem);
     }
 
-    public function clearShmConfig($nameSpace)
+    public function clearShm($nameSpace)
     {
         if (PHP_OS != "Linux") {
             return;
@@ -80,10 +80,10 @@ class ConfigManager
         shmop_close($shm_id);
     }
 
-    private function getShmConfig($path)
+    private function getShm($path)
     {
         if (PHP_OS != "Linux") {
-            return $this->readFile($path);
+            return $this->loadFile($path);
         }
         $shm_key = ftok($path, '2');
         $shm_id = shmop_open($shm_key, "c", 0644, SHARE_CACHE_SIZE * 1024);
@@ -91,7 +91,7 @@ class ConfigManager
         if ($data != null) {
             $data = str_replace("\x00", "", $data);
             if (empty($data)) {
-                $data = $this->readFile($path);
+                $data = $this->loadFile($path);
                 if (!empty($data)) {
                     shmop_write($shm_id, $data, 0);
                 }
@@ -101,7 +101,7 @@ class ConfigManager
         return $data;
     }
 
-    private function readFile($path)
+    private function loadFile($path)
     {
         $f = fopen($path, "r");
         $data = fread($f, filesize($path));
