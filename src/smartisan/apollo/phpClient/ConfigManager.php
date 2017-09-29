@@ -26,14 +26,14 @@ class ConfigManager
         return self::$sInstance;
     }
 
-    public function getConfigArray($nameSpace)
+    public function getConfigArray($namespace)
     {
         $configArray = null;
-        $suffix = $this->getSuffix($nameSpace);
+        $suffix = $this->getSuffix($namespace);
         if (!in_array($suffix, $this->suffixArray)) {
             throw new \Exception("not support the file format:" . $suffix);
         }
-        $content = $this->getConfigByNameSpace($nameSpace);
+        $content = $this->getConfigByNameSpace($namespace);
         if (is_null($content) || empty($content)) {
             return $configArray;
         }
@@ -74,21 +74,21 @@ class ConfigManager
         }
     }
 
-    private function getConfigByNameSpace($nameSpace)
+    private function getConfigByNameSpace($namespace)
     {
-        $pathTem = $this->filePath . $nameSpace;
+        $pathTem = $this->filePath . $namespace;
         if (!file_exists($pathTem)) {
             throw new \Exception(" no such file " . $pathTem);
         }
         return $this->getShm($pathTem);
     }
 
-    public function clearShm($nameSpace)
+    public function clearShm($namespace)
     {
         if (PHP_OS != "Linux") {
             return;
         }
-        $path = $this->filePath . $nameSpace;
+        $path = $this->filePath . $namespace;
         if (!file_exists($path)) {
             throw new \Exception(" no such file " . $path);
         }
@@ -127,10 +127,10 @@ class ConfigManager
         return $data;
     }
 
-    private function getSuffix($nameSpace)
+    private function getSuffix($namespace)
     {
-        $nameSpaceSuffixArray = explode('.', $nameSpace);
-        return end($nameSpaceSuffixArray);
+        $namespaceSuffixArray = explode('.', $namespace);
+        return end($namespaceSuffixArray);
     }
 
     private function getXmlToArray($content)
