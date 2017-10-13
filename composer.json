@@ -2,21 +2,23 @@
     "name": "smartisan/apolloPhpClient",
     "type": "library",
     "license": "MIT",
-    "version":"1.0.0",
+    "version": "1.0.0",
     "require": {
         "php": ">=5.4.0"
     },
     "suggest": {
-
     },
     "autoload": {
         "psr-4": {
             "smartisan\\apollo\\phpClient\\": "src/smartisan/apollo/phpClient"
         },
-        "files": ["src/smartisan/apollo/phpClient/Config.php"]
+        "files": [
+            "src/smartisan/apollo/phpClient/Config.php"
+        ]
     },
-     "extra":{
-        "branch-alias":{
-            "master":"1.0.0" 
-        } 
+    "extra": {
+        "branch-alias": {
+            "master": "1.0.0"
+        }
+    }
 }

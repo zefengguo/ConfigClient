@@ -1,12 +1,10 @@
 <?php
+namespace Smartisan\ConfigClient;
 
-namespace smartisan\apollo\phpClient;
-
-class ConfigManager
+class ConfigLoader
 {
-    private static $sInstance = null;
-    private $filePath = "";
-    private $suffixArray = array('properties', 'xml', 'json', 'yml', 'yaml');
+    private static $sInstance;
+    private static $sSuffixArray = array('properties', 'xml', 'json', 'yml', 'yaml');
 
     private function __construct()
     {
@@ -20,7 +18,7 @@ class ConfigManager
 
     public static function getInstance()
     {
-        if (is_null(self::$sInstance) || isset (self::$sInstance)) {
+        if (!(self::$sInstance instanceof self)) {
             self::$sInstance = new self ();
         }
         return self::$sInstance;
@@ -30,7 +28,7 @@ class ConfigManager
     {
         $configArray = null;
         $suffix = $this->getSuffix($namespace);
-        if (!in_array($suffix, $this->suffixArray)) {
+        if (!in_array($suffix, self::$sSuffixArray)) {
             throw new \Exception("not support the file format:" . $suffix);
         }
         $content = $this->getConfigByNameSpace($namespace);
@@ -64,11 +62,6 @@ class ConfigManager
         if (!is_dir(CONFIG_FILE_PATH)) {
             throw new \Exception("no such directory:" . CONFIG_FILE_PATH);
         }
-        $this->filePath = CONFIG_FILE_PATH;
-        $suffix = substr($this->filePath, -1);
-        if ($suffix != "/" && $suffix != "\\") {
-            $this->filePath = $this->filePath . "/";
-        }
         if (!defined('SHARE_CACHE_SIZE')) {
             define("SHARE_CACHE_SIZE", 5);
         }
@@ -76,35 +69,14 @@ class ConfigManager
 
     private function getConfigByNameSpace($namespace)
     {
-        $pathTem = $this->filePath . $namespace;
-        if (!file_exists($pathTem)) {
-            throw new \Exception(" no such file " . $pathTem);
-        }
-        return $this->getShm($pathTem);
-    }
-
-    public function clearShm($namespace)
-    {
-        if (PHP_OS != "Linux") {
-            return;
-        }
-        $path = $this->filePath . $namespace;
+        $path = $this->combinePath(CONFIG_FILE_PATH, $namespace);
         if (!file_exists($path)) {
             throw new \Exception(" no such file " . $path);
         }
-        $shm_key = ftok($path, '2');
-        $shm_id = shmop_open($shm_key, "c", 0644, SHARE_CACHE_SIZE * 1024);
-        shmop_delete($shm_id);
-        shmop_close($shm_id);
-    }
-
-    private function getShm($path)
-    {
         if (PHP_OS != "Linux") {
             return $this->loadFile($path);
         }
-        $shm_key = ftok($path, '2');
-        $shm_id = shmop_open($shm_key, "c", 0644, SHARE_CACHE_SIZE * 1024);
+        $shm_id = $this->getShmId($path);
         $data = shmop_read($shm_id, 0, SHARE_CACHE_SIZE * 1024);
         if ($data != null) {
             $data = str_replace("\x00", "", $data);
@@ -119,6 +91,27 @@ class ConfigManager
         return $data;
     }
 
+    private function getShmId($path)
+    {
+        $shm_key = ftok($path, '2');
+        $shm_id = shmop_open($shm_key, "c", 0777, SHARE_CACHE_SIZE * 1024);
+        return $shm_id;
+    }
+
+    public function clearShm($namespace)
+    {
+        if (PHP_OS != "Linux") {
+            return;
+        }
+        $path = $this->combinePath(CONFIG_FILE_PATH, $namespace);
+        if (!file_exists($path)) {
+            throw new \Exception(" no such file " . $path);
+        }
+        $shm_id = $this->getShmId($path);
+        shmop_delete($shm_id);
+        shmop_close($shm_id);
+    }
+
     private function loadFile($path)
     {
         $f = fopen($path, "r");
@@ -131,6 +124,11 @@ class ConfigManager
     {
         $namespaceSuffixArray = explode('.', $namespace);
         return end($namespaceSuffixArray);
+    }
+
+    private function combinePath($path, $anotherPath)
+    {
+        return realpath($path) . DIRECTORY_SEPARATOR . $anotherPath;
     }
 
     private function getXmlToArray($content)
