@@ -1,9 +1,10 @@
 {
-    "name": "smartisan/config_client",
+    "name": "smartisan/config-client",
+    "description":"load config from shm",
+    "homepage":"http://git.smartisan.com/infrastructure/apollo-client-php",
     "type": "library",
     "license": "MIT",
     "version":"1.0.0",
-    "minimum-stability":"dev",
     "require": {
         "php": ">=5.4.0"
     },
@@ -12,10 +13,5 @@
             "Smartisan\\ConfigClient\\": "src/Smartisan/ConfigClient"
         },
         "files": ["src/Smartisan/ConfigClient/Config.php"]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master":"1.0.x-dev"
-        }
     }
 }
